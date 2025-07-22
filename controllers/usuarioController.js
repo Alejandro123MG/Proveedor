@@ -10,16 +10,19 @@ const connection = mysql.createConnection({
   port: process.env.DB_PORT
 });
 
-// GET - consultar por nombre (empresa) o todos
+// GET - consultar por filtro (empresa/direccion/descripcion) o todos
 function consultarProveedores(req, res, next) {
-  const { empresa } = req.query;
+  const { filtro, campo } = req.query;
+
+  const camposValidos = ['empresa', 'direccion', 'descripcion'];
+  const campoBusqueda = camposValidos.includes(campo) ? campo : 'empresa';
 
   let sql = '';
   let params = [];
 
-  if (empresa) {
-    sql = 'SELECT * FROM Proveedores WHERE empresa LIKE ?';
-    params.push(`%${empresa}%`);
+  if (filtro) {
+    sql = `SELECT * FROM Proveedores WHERE ${campoBusqueda} LIKE ?`;
+    params = [`%${filtro}%`];
   } else {
     sql = 'SELECT * FROM Proveedores';
   }
@@ -30,20 +33,21 @@ function consultarProveedores(req, res, next) {
   });
 }
 
+
 // POST - insertar proveedor
 function insertarProveedor(req, res, next) {
   const {
-    empresa, contacto, correo, telefono,
+    empresa, direccion, contacto, correo, telefono,
     sitio_web, facebook, instagram, youtube,
     twitter, linkedin, descripcion
   } = req.body;
 
   const sql = `INSERT INTO Proveedores 
-    (empresa, contacto, correo, telefono, sitio_web, facebook, instagram, youtube, twitter, linkedin, descripcion) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    (empresa, direccion, contacto, correo, telefono, sitio_web, facebook, instagram, youtube, twitter, linkedin, descripcion) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   connection.query(sql, [
-    empresa, contacto, correo, telefono,
+    empresa, direccion, contacto, correo, telefono,
     sitio_web, facebook, instagram, youtube,
     twitter, linkedin, descripcion
   ], (error, results) => {
@@ -57,18 +61,18 @@ function actualizarProveedor(req, res, next) {
   const nombre = req.params.empresa;
 
   const {
-    empresa, contacto, correo, telefono,
+    empresa, direccion, contacto, correo, telefono,
     sitio_web, facebook, instagram, youtube,
     twitter, linkedin, descripcion
   } = req.body;
 
   const sql = `UPDATE Proveedores SET
-    empresa = ?, contacto = ?, correo = ?, telefono = ?, sitio_web = ?, 
+    empresa = ?, direccion = ?, contacto = ?, correo = ?, telefono = ?, sitio_web = ?, 
     facebook = ?, instagram = ?, youtube = ?, twitter = ?, linkedin = ?, descripcion = ?
     WHERE empresa = ?`;
 
   connection.query(sql, [
-    empresa, contacto, correo, telefono,
+    empresa, direccion, contacto, correo, telefono,
     sitio_web, facebook, instagram, youtube,
     twitter, linkedin, descripcion, nombre
   ], (error, results) => {
