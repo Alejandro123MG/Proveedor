@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proveedores (API)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+    .form-control, .form-select, textarea {
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+    }
+    .table-dark th {
+      background-color: #343a40 !important;
+    }
+    .scrollable-table {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .stat-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      flex: 1;
+      min-width: 140px;
+      text-align: center;
+      color: white;
+      border-radius: 8px;
+      padding: 1.5rem 0.5rem;
+    }
+    .facebook { background-color: #1877F2; }
+    .instagram { background: linear-gradient(to right, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); }
+    .youtube { background-color: #FF0000; }
+    .twitter { background-color: #1DA1F2; }
+    .linkedin { background-color: #6c757d; }
+    .sitio { background-color: #198754; }
+    .total { background-color: #6c757d; }
+  </style>
+</head>
+<body class="bg-light text-dark">
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+    <i id="theme-icon" class="fas fa-moon text-dark"></i>
+  </button>
+  <div class="container py-4">
+    <h2 class="mb-4">Proveedores</h2>
+    <div class="stat-cards" id="resumenEstadistico"></div>
+    <form id="proveedorForm" class="row g-3">
+      <div class="col-md-6"><input type="text" id="empresa" class="form-control" placeholder="Empresa" required></div>
+      <div class="col-md-6"><input type="text" id="contacto" class="form-control" placeholder="Contacto"></div>
+      <div class="col-md-6"><input type="email" id="correo" class="form-control" placeholder="Correo"></div>
+      <div class="col-md-6"><input type="text" id="telefono" class="form-control" placeholder="Teléfono"></div>
+      <div class="col-md-6"><input type="text" id="sitio_web" class="form-control" placeholder="Sitio Web"></div>
+      <div class="col-md-6"><input type="text" id="facebook" class="form-control" placeholder="Facebook"></div>
+      <div class="col-md-6"><input type="text" id="instagram" class="form-control" placeholder="Instagram"></div>
+      <div class="col-md-6"><input type="text" id="youtube" class="form-control" placeholder="YouTube"></div>
+      <div class="col-md-6"><input type="text" id="twitter" class="form-control" placeholder="Twitter"></div>
+      <div class="col-md-6"><input type="text" id="linkedin" class="form-control" placeholder="LinkedIn"></div>
+      <div class="col-12"><textarea id="descripcion" class="form-control" placeholder="Descripción"></textarea></div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancelar</button>
+      </div>
+    </form>
+    <hr class="my-4">
+    <input type="text" id="buscar" class="form-control mb-4" placeholder="Buscar por nombre de empresa">
+    <h3 class="mb-3">Lista de Proveedores</h3>
+    <div class="table-responsive scrollable-table">
+      <table class="table table-bordered text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Empresa</th><th>Correo</th><th>Teléfono</th><th>Sitio Web</th><th>Redes Sociales</th><th>Descripción</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="proveedoresTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+<script>
+const apiUrl = `${window.location.origin}/Proveedor`;
+let proveedorEditando = null;
+function toggleTheme() {
+  const html = document.documentElement;
+  const icon = document.getElementById("theme-icon");
+  const current = html.getAttribute("data-bs-theme");
+  const isLight = current === "light";
+  html.setAttribute("data-bs-theme", isLight ? "dark" : "light");
+  icon.className = isLight ? "fas fa-sun text-light" : "fas fa-moon text-dark";
+  document.body.className = isLight ? "bg-dark text-light" : "bg-light text-dark";
+}
+function actualizarResumen(data) {
+  const total = data.length;
+  const conWeb = data.filter(p => p.sitio_web).length;
+  const conFB = data.filter(p => p.facebook).length;
+  const conIG = data.filter(p => p.instagram).length;
+  const conYT = data.filter(p => p.youtube).length;
+  const conTW = data.filter(p => p.twitter).length;
+  const conIN = data.filter(p => p.linkedin).length;
+  document.getElementById("resumenEstadistico").innerHTML = `
+    <div class="stat-card total"><i class="fas fa-users fa-2x"></i><div class="fs-4">${total}</div></div>
+    <div class="stat-card facebook"><i class="fab fa-facebook fa-2x"></i><div class="fs-4">${conFB}</div></div>
+    <div class="stat-card instagram"><i class="fab fa-instagram fa-2x"></i><div class="fs-4">${conIG}</div></div>
+    <div class="stat-card youtube"><i class="fab fa-youtube fa-2x"></i><div class="fs-4">${conYT}</div></div>
+    <div class="stat-card twitter"><i class="fab fa-twitter fa-2x"></i><div class="fs-4">${conTW}</div></div>
+    <div class="stat-card linkedin"><i class="fab fa-linkedin fa-2x"></i><div class="fs-4">${conIN}</div></div>
+    <div class="stat-card sitio"><i class="fas fa-globe fa-2x"></i><div class="fs-4">${conWeb}</div></div>
+  `;
+}
+async function fetchProveedores(filtro = '') {
+  try {
+    const res = await fetch(filtro ? `${apiUrl}?empresa=${encodeURIComponent(filtro)}` : apiUrl);
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    actualizarResumen(data);
+    const tbody = document.getElementById("proveedoresTableBody");
+    tbody.innerHTML = '';
+    data.forEach(p => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${p.empresa}</td>
+          <td>${p.correo}</td>
+          <td>${p.telefono}</td>
+          <td><a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a></td>
+          <td>
+            ${p.facebook ? `<a href="${p.facebook}" target="_blank"><i class="fab fa-facebook" style="color:#1877F2;"></i></a>` : ''}
+            ${p.instagram ? `<a href="${p.instagram}" target="_blank"><i class="fab fa-instagram" style="color:#E1306C;"></i></a>` : ''}
+            ${p.youtube ? `<a href="${p.youtube}" target="_blank"><i class="fab fa-youtube" style="color:#FF0000;"></i></a>` : ''}
+            ${p.twitter ? `<a href="${p.twitter}" target="_blank"><i class="fab fa-twitter" style="color:#1DA1F2;"></i></a>` : ''}
+            ${p.linkedin ? `<a href="${p.linkedin}" target="_blank"><i class="fab fa-linkedin" style="color:#0077B5;"></i></a>` : ''}
+          </td>
+          <td>${p.descripcion}</td>
+          <td>
+            <div class="d-flex justify-content-center gap-2">
+              <button class="btn btn-warning btn-icon btn-sm" onclick='editProveedor(${JSON.stringify(p)})'>
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="btn btn-danger btn-icon btn-sm" onclick="deleteProveedor('${p.empresa}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+  } catch (error) {
+    console.error('Error al obtener proveedores:', error);
+    alert('No se pudo conectar con el servidor.');
+  }
+}
+function editProveedor(p) {
+  proveedorEditando = p.empresa;
+  document.getElementById("empresa").value = p.empresa;
+  document.getElementById("contacto").value = p.contacto;
+  document.getElementById("correo").value = p.correo;
+  document.getElementById("telefono").value = p.telefono;
+  document.getElementById("sitio_web").value = p.sitio_web;
+  document.getElementById("facebook").value = p.facebook;
+  document.getElementById("instagram").value = p.instagram;
+  document.getElementById("youtube").value = p.youtube;
+  document.getElementById("twitter").value = p.twitter;
+  document.getElementById("linkedin").value = p.linkedin;
+  document.getElementById("descripcion").value = p.descripcion;
+}
+function resetForm() {
+  proveedorEditando = null;
+  document.getElementById("proveedorForm").reset();
+}
+function deleteProveedor(nombreEmpresa) {
+  if (confirm(`¿Eliminar proveedor "${nombreEmpresa}"?`)) {
+    fetch(`${apiUrl}/${encodeURIComponent(nombreEmpresa)}`, { method: 'DELETE' })
+      .then(() => fetchProveedores(document.getElementById("buscar").value))
+      .catch(err => alert("Error al eliminar proveedor: " + err));
+  }
+}
+document.getElementById("proveedorForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const proveedor = {
+    empresa: document.getElementById("empresa").value,
+    contacto: document.getElementById("contacto").value,
+    correo: document.getElementById("correo").value,
+    telefono: document.getElementById("telefono").value,
+    sitio_web: document.getElementById("sitio_web").value,
+    facebook: document.getElementById("facebook").value,
+    instagram: document.getElementById("instagram").value,
+    youtube: document.getElementById("youtube").value,
+    twitter: document.getElementById("twitter").value,
+    linkedin: document.getElementById("linkedin").value,
+    descripcion: document.getElementById("descripcion").value
+  };
+  const method = proveedorEditando ? 'PUT' : 'POST';
+  const url = proveedorEditando ? `${apiUrl}/${encodeURIComponent(proveedorEditando)}` : apiUrl;
+  fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(proveedor)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+      return res.json();
+    })
+    .then(() => {
+      resetForm();
+      fetchProveedores(document.getElementById("buscar").value);
+    })
+    .catch(err => alert("Error al guardar proveedor: " + err));
+});
+document.getElementById("buscar").addEventListener("input", function() {
+  fetchProveedores(this.value);
+});
+fetchProveedores();
+</script>
+</body>
+</html>
