@@ -51,10 +51,13 @@ function showError(mensaje) {
   });
 }
 
-// función para mostrar guion o ícono si no hay dato
-function mostrarDato(dato) {
+// función para mostrar dato truncado si es largo
+function mostrarDato(dato, maxLen = 50) {
   if (!dato || dato.trim() === "" || dato.toLowerCase() === "null") {
     return `<i class="fas fa-minus-circle text-muted"></i>`;
+  }
+  if (dato.length > maxLen) {
+    return `<span title="${dato}">${dato.substring(0, maxLen)}...</span>`;
   }
   return dato;
 }
