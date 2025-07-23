@@ -7,6 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="script.js" defer></script>
 </head>
 <body>
@@ -43,13 +44,21 @@
 
 <hr class="my-4">
 
-<div class="input-group mb-4">
-  <select id="campo" class="form-select" style="max-width: 150px;">
-    <option value="empresa">Nombre</option>
-    <option value="direccion">Dirección</option>
-    <option value="descripcion">Descripción</option>
-  </select>
-  <input type="text" id="buscar" class="form-control" placeholder="Buscar...">
+<div class="mb-4">
+  <div class="input-group shadow-sm">
+    <span class="input-group-text bg-primary text-white">
+      <i class="fas fa-search"></i>
+    </span>
+    <select id="campo" class="form-select" style="max-width: 150px;">
+      <option value="empresa">Nombre</option>
+      <option value="direccion">Dirección</option>
+      <option value="descripcion">Descripción</option>
+    </select>
+    <input type="text" id="buscar" class="form-control" placeholder="Buscar proveedor...">
+    <button class="btn btn-outline-secondary" id="clearSearch" title="Limpiar">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 </div>
 
 <h3 class="mb-3">Lista de Proveedores</h3>

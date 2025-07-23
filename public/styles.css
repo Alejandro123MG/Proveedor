@@ -12,14 +12,11 @@ body {
   font-size: 1.2rem;
 }
 
-.table td,
-.table th {
+.table td, .table th {
   vertical-align: middle;
 }
 
-.form-control,
-.form-select,
-textarea {
+.form-control, .form-select, textarea {
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -52,33 +49,15 @@ textarea {
   padding: 1.5rem 0.5rem;
 }
 
-.facebook {
-  background-color: #1877F2;
-}
-
+.facebook { background-color: #1877F2; }
 .instagram {
   background: linear-gradient(to right, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
 }
-
-.youtube {
-  background-color: #FF0000;
-}
-
-.twitter {
-  background-color: #1DA1F2;
-}
-
-.linkedin {
-  background-color: #6c757d;
-}
-
-.sitio {
-  background-color: #198754;
-}
-
-.total {
-  background-color: #6c757d;
-}
+.youtube { background-color: #FF0000; }
+.twitter { background-color: #1DA1F2; }
+.linkedin { background-color: #6c757d; }
+.sitio { background-color: #198754; }
+.total { background-color: #6c757d; }
 
 /* mejoras tabla */
 table.table-hover tbody tr:hover {
@@ -102,8 +81,7 @@ table.table-hover tbody tr:hover {
   width: 100%;
 }
 
-.scrollable-table th,
-.scrollable-table td {
+.scrollable-table th, .scrollable-table td {
   word-wrap: break-word;
   text-align: center;
 }
@@ -114,4 +92,15 @@ table.table-hover tbody tr:hover {
   z-index: 1;
   background-color: #343a40;
   color: white;
+}
+
+/* buscador */
+.input-group .form-select {
+  border-radius: 0;
+}
+.input-group .form-control {
+  border-radius: 0;
+}
+.input-group-text {
+  border-radius: .25rem 0 0 .25rem;
 }
