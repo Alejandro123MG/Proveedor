@@ -51,6 +51,14 @@ function showError(mensaje) {
   });
 }
 
+// función para mostrar guion o ícono si no hay dato
+function mostrarDato(dato) {
+  if (!dato || dato.trim() === "" || dato.toLowerCase() === "null") {
+    return `<i class="fas fa-minus-circle text-muted"></i>`;
+  }
+  return dato;
+}
+
 // Resumen estadístico
 function actualizarResumen(data) {
   const total = data.length;
@@ -109,11 +117,13 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
     data.forEach(p => {
       tbody.innerHTML += `
       <tr>
-        <td>${p.empresa}</td>
-        <td>${p.direccion}</td>
-        <td>${p.correo}</td>
-        <td>${p.telefono}</td>
-        <td><a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a></td>
+        <td>${mostrarDato(p.empresa)}</td>
+        <td>${mostrarDato(p.direccion)}</td>
+        <td>${mostrarDato(p.correo)}</td>
+        <td>${mostrarDato(p.telefono)}</td>
+        <td>
+          ${p.sitio_web ? `<a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a>` : mostrarDato(null)}
+        </td>
         <td>
           ${p.facebook ? `<a href="${p.facebook}" target="_blank"><i class="fab fa-facebook" style="color:#1877F2;"></i></a>` : ''}
           ${p.instagram ? `<a href="${p.instagram}" target="_blank"><i class="fab fa-instagram" style="color:#E1306C;"></i></a>` : ''}
@@ -121,7 +131,7 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
           ${p.twitter ? `<a href="${p.twitter}" target="_blank"><i class="fab fa-twitter" style="color:#1DA1F2;"></i></a>` : ''}
           ${p.linkedin ? `<a href="${p.linkedin}" target="_blank"><i class="fab fa-linkedin" style="color:#0077B5;"></i></a>` : ''}
         </td>
-        <td>${p.descripcion}</td>
+        <td>${mostrarDato(p.descripcion)}</td>
         <td>
           <div class="d-flex justify-content-center gap-2">
             <button class="btn btn-warning btn-icon btn-sm" onclick='editProveedor(${JSON.stringify(p)})' title="Editar">
@@ -141,7 +151,6 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
 }
 
 // Editar proveedor
-
 function editProveedor(p) {
   Swal.fire({
     title: `¿Editar proveedor "${p.empresa}"?`,
@@ -171,14 +180,13 @@ function editProveedor(p) {
   });
 }
 
-
 // Reset form
 function resetForm() {
   proveedorEditando = null;
   document.getElementById("proveedorForm").reset();
 }
 
-// Eliminar proveedor con confirmación
+// Eliminar proveedor
 function deleteProveedor(nombreEmpresa) {
   Swal.fire({
     title: `¿Eliminar proveedor "${nombreEmpresa}"?`,
@@ -212,7 +220,7 @@ function debounce(func, delay) {
   };
 }
 
-// Guardar proveedor con modal de éxito
+// Guardar proveedor
 document.getElementById("proveedorForm").addEventListener("submit", function(e) {
   e.preventDefault();
   const proveedor = {

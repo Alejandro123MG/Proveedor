@@ -104,3 +104,18 @@ table.table-hover tbody tr:hover {
 .input-group-text {
   border-radius: .25rem 0 0 .25rem;
 }
+
+/* 🎨 título con degradado */
+.titulo-pagina {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #007bff, #6610f2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+
+
