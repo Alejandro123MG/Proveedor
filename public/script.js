@@ -141,21 +141,36 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
 }
 
 // Editar proveedor
+
 function editProveedor(p) {
-  proveedorEditando = p.empresa;
-  document.getElementById("empresa").value = p.empresa;
-  document.getElementById("direccion").value = p.direccion;
-  document.getElementById("contacto").value = p.contacto;
-  document.getElementById("correo").value = p.correo;
-  document.getElementById("telefono").value = p.telefono;
-  document.getElementById("sitio_web").value = p.sitio_web;
-  document.getElementById("facebook").value = p.facebook;
-  document.getElementById("instagram").value = p.instagram;
-  document.getElementById("youtube").value = p.youtube;
-  document.getElementById("twitter").value = p.twitter;
-  document.getElementById("linkedin").value = p.linkedin;
-  document.getElementById("descripcion").value = p.descripcion;
+  Swal.fire({
+    title: `¿Editar proveedor "${p.empresa}"?`,
+    text: "Puedes modificar sus datos y guardar los cambios.",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Sí, editar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      proveedorEditando = p.empresa;
+      document.getElementById("empresa").value = p.empresa;
+      document.getElementById("direccion").value = p.direccion;
+      document.getElementById("contacto").value = p.contacto;
+      document.getElementById("correo").value = p.correo;
+      document.getElementById("telefono").value = p.telefono;
+      document.getElementById("sitio_web").value = p.sitio_web;
+      document.getElementById("facebook").value = p.facebook;
+      document.getElementById("instagram").value = p.instagram;
+      document.getElementById("youtube").value = p.youtube;
+      document.getElementById("twitter").value = p.twitter;
+      document.getElementById("linkedin").value = p.linkedin;
+      document.getElementById("descripcion").value = p.descripcion;
+    }
+  });
 }
+
 
 // Reset form
 function resetForm() {
