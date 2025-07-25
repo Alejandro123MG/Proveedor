@@ -1,7 +1,6 @@
 const apiUrl = `${window.location.origin}/Proveedor`;
 let proveedorEditando = null;
 
-// Tema claro/oscuro
 function aplicarTema(tema) {
   const html = document.documentElement;
   const icon = document.getElementById("theme-icon");
@@ -28,18 +27,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme") || "light";
   aplicarTema(savedTheme);
   fetchProveedores();
+
+  // Eliminar error al escribir en "empresa"
+  const empresaInput = document.getElementById("empresa");
+  empresaInput.addEventListener("input", () => {
+    if (empresaInput.value.trim() !== "") {
+      empresaInput.classList.remove("input-error");
+      document.getElementById("empresaError").classList.add("d-none");
+    }
+  });
 });
 
-// 🔔 Notificaciones con SweetAlert2
 function showToast(mensaje, icono = 'success') {
   Swal.fire({
     toast: true,
     position: 'top-end',
     icon: icono,
-    title: mensaje,
+    html: `<span style="font-size: 1.1rem;">${mensaje}</span>`,
     showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true
+    timer: 4000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
   });
 }
 
@@ -51,7 +62,6 @@ function showError(mensaje) {
   });
 }
 
-// función para mostrar dato truncado si es largo
 function mostrarDato(dato, maxLen = 50) {
   if (!dato || dato.trim() === "" || dato.toLowerCase() === "null") {
     return `<i class="fas fa-minus-circle text-muted"></i>`;
@@ -62,7 +72,6 @@ function mostrarDato(dato, maxLen = 50) {
   return dato;
 }
 
-// Resumen estadístico
 function actualizarResumen(data) {
   const total = data.length;
   const conWeb = data.filter(p => p.sitio_web).length;
@@ -82,7 +91,6 @@ function actualizarResumen(data) {
     <div class="stat-card sitio"><i class="fas fa-globe fa-2x"></i><div class="fs-4">${conWeb}</div></div>`;
 }
 
-// Obtener proveedores
 async function fetchProveedores(filtro = '', campo = 'empresa') {
   try {
     const params = new URLSearchParams();
@@ -92,12 +100,7 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
     }
 
     const tbody = document.getElementById("proveedoresTableBody");
-
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="8" class="text-center text-muted">Cargando...</td>
-      </tr>
-    `;
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Cargando...</td></tr>`;
 
     const res = await fetch(filtro ? `${apiUrl}?${params.toString()}` : apiUrl);
     if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
@@ -107,13 +110,7 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
     tbody.innerHTML = '';
 
     if (data.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="8" class="text-center text-muted">
-            <i class="fas fa-info-circle"></i> No se encontraron resultados.
-          </td>
-        </tr>
-      `;
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted"><i class="fas fa-info-circle"></i> No se encontraron resultados.</td></tr>`;
       return;
     }
 
@@ -124,9 +121,7 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
         <td>${mostrarDato(p.direccion)}</td>
         <td>${mostrarDato(p.correo)}</td>
         <td>${mostrarDato(p.telefono)}</td>
-        <td>
-          ${p.sitio_web ? `<a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a>` : mostrarDato(null)}
-        </td>
+        <td>${p.sitio_web ? `<a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a>` : mostrarDato(null)}</td>
         <td>
           ${p.facebook ? `<a href="${p.facebook}" target="_blank"><i class="fab fa-facebook" style="color:#1877F2;"></i></a>` : ''}
           ${p.instagram ? `<a href="${p.instagram}" target="_blank"><i class="fab fa-instagram" style="color:#E1306C;"></i></a>` : ''}
@@ -153,7 +148,6 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
   }
 }
 
-// Editar proveedor
 function editProveedor(p) {
   Swal.fire({
     title: `¿Editar proveedor "${p.empresa}"?`,
@@ -168,6 +162,7 @@ function editProveedor(p) {
     if (result.isConfirmed) {
       proveedorEditando = p.empresa;
       document.getElementById("empresa").value = p.empresa;
+      document.getElementById("empresa").disabled = true;
       document.getElementById("direccion").value = p.direccion;
       document.getElementById("contacto").value = p.contacto;
       document.getElementById("correo").value = p.correo;
@@ -183,13 +178,15 @@ function editProveedor(p) {
   });
 }
 
-// Reset form
 function resetForm() {
   proveedorEditando = null;
   document.getElementById("proveedorForm").reset();
+  const empresaInput = document.getElementById("empresa");
+  empresaInput.disabled = false;
+  empresaInput.classList.remove("input-error");
+  document.getElementById("empresaError").classList.add("d-none");
 }
 
-// Eliminar proveedor
 function deleteProveedor(nombreEmpresa) {
   Swal.fire({
     title: `¿Eliminar proveedor "${nombreEmpresa}"?`,
@@ -207,14 +204,13 @@ function deleteProveedor(nombreEmpresa) {
           const filtro = document.getElementById("buscar").value.trim();
           const campo = document.getElementById("campo").value;
           fetchProveedores(filtro, campo);
-          showToast("Proveedor eliminado correctamente", "success");
+          showToast("🗑️ Proveedor eliminado correctamente");
         })
         .catch(err => showError("Error al eliminar proveedor: " + err));
     }
   });
 }
 
-// debounce para búsqueda
 function debounce(func, delay) {
   let timeout;
   return function (...args) {
@@ -223,11 +219,19 @@ function debounce(func, delay) {
   };
 }
 
-// Guardar proveedor
 document.getElementById("proveedorForm").addEventListener("submit", function(e) {
   e.preventDefault();
+  const empresaInput = document.getElementById("empresa");
+
+  if (!proveedorEditando && empresaInput.value.trim() === "") {
+    empresaInput.classList.add("input-error");
+    document.getElementById("empresaError").classList.remove("d-none");
+    empresaInput.focus();
+    return;
+  }
+
   const proveedor = {
-    empresa: document.getElementById("empresa").value,
+    empresa: empresaInput.value,
     direccion: document.getElementById("direccion").value,
     contacto: document.getElementById("contacto").value,
     correo: document.getElementById("correo").value,
@@ -240,6 +244,7 @@ document.getElementById("proveedorForm").addEventListener("submit", function(e) 
     linkedin: document.getElementById("linkedin").value,
     descripcion: document.getElementById("descripcion").value
   };
+
   const method = proveedorEditando ? 'PUT' : 'POST';
   const url = proveedorEditando ? `${apiUrl}/${encodeURIComponent(proveedorEditando)}` : apiUrl;
 
@@ -253,27 +258,21 @@ document.getElementById("proveedorForm").addEventListener("submit", function(e) 
     return res.json();
   })
   .then(() => {
+    const fueEdicion = !!proveedorEditando;
     resetForm();
     const filtro = document.getElementById("buscar").value.trim();
     const campo = document.getElementById("campo").value;
     fetchProveedores(filtro, campo);
 
-    const mensaje = proveedorEditando
-      ? "Proveedor actualizado correctamente"
-      : "Proveedor agregado correctamente";
+    const mensaje = fueEdicion
+      ? "✏️ Proveedor actualizado correctamente"
+      : "✅ Proveedor agregado correctamente";
 
-    Swal.fire({
-      icon: 'success',
-      title: '¡Éxito!',
-      text: mensaje,
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'OK'
-    });
+    showToast(mensaje, "success");
   })
   .catch(err => showError("Error al guardar proveedor: " + err));
 });
 
-// Búsqueda en tiempo real
 document.getElementById("buscar").addEventListener(
   "input",
   debounce(function () {
@@ -288,7 +287,6 @@ document.getElementById("campo").addEventListener("change", () => {
   fetchProveedores(filtro, campo);
 });
 
-// Limpiar búsqueda
 document.getElementById("clearSearch").addEventListener("click", () => {
   document.getElementById("buscar").value = '';
   const campo = document.getElementById("campo").value;

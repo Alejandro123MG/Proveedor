@@ -30,7 +30,7 @@ body {
 }
 
 .table-dark th {
-  background-color: #343a40 !important;
+  background-color: #123d69 !important;
 }
 
 .stat-cards {
@@ -115,4 +115,16 @@ table.table-hover tbody tr:hover {
   color: transparent;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+}
+
+/* 🛑 VALIDACIÓN VISUAL CAMPO EMPRESA */
+.input-error {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff0f0;
+}
+
+.input-error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
