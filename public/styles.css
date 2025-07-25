@@ -94,17 +94,6 @@ table.table-hover tbody tr:hover {
   color: white;
 }
 
-/* buscador */
-.input-group .form-select {
-  border-radius: 0;
-}
-.input-group .form-control {
-  border-radius: 0;
-}
-.input-group-text {
-  border-radius: .25rem 0 0 .25rem;
-}
-
 /* 🎨 título con degradado */
 .titulo-pagina {
   font-size: 2.5rem;
@@ -117,7 +106,58 @@ table.table-hover tbody tr:hover {
   display: inline-block;
 }
 
-/* 🛑 VALIDACIÓN VISUAL CAMPO EMPRESA */
+/* ✅ Buscador moderno */
+.input-group.shadow-sm {
+  border: 2px solid #0d6efd;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--bs-body-bg);
+  transition: box-shadow 0.3s ease;
+}
+
+.input-group.shadow-sm:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group-text {
+  background: linear-gradient(135deg, #007bff, #6610f2);
+  color: white;
+  border: none;
+}
+
+.input-group .form-select,
+.input-group .form-control,
+.input-group .btn-outline-secondary {
+  border: none;
+  box-shadow: none;
+}
+
+.input-group .form-select {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 500;
+}
+
+.input-group .form-control::placeholder {
+  color: #888;
+}
+
+.input-group .form-control:focus {
+  background-color: var(--bs-body-bg);
+  outline: none;
+  box-shadow: none;
+}
+
+.input-group .btn-outline-secondary {
+  color: #888;
+  transition: color 0.3s;
+}
+
+.input-group .btn-outline-secondary:hover {
+  color: #dc3545;
+}
+
+/* Validación de errores para campos */
 .input-error {
   border: 2px solid #dc3545 !important;
   background-color: #fff0f0;
@@ -127,4 +167,22 @@ table.table-hover tbody tr:hover {
   color: #dc3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
+}
+
+/* 🎨 Ajustes para <select> en modo oscuro */
+[data-bs-theme="dark"] select.form-select {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+  border-color: #444;
+}
+
+[data-bs-theme="dark"] select.form-select option {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+}
+
+/* 🎨 Ajustes para <select> en modo claro */
+[data-bs-theme="light"] select.form-select option {
+  background-color: #fff;
+  color: #000;
 }
