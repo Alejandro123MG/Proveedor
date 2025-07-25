@@ -19,33 +19,40 @@
     <h2 class="mb-4 titulo-pagina">Proveedores</h2>
     <div class="stat-cards" id="resumenEstadistico"></div>
 
-    <form id="proveedorForm" class="row g-3">
-      <!-- CAMPO EMPRESA CON VALIDACIÓN VISUAL -->
-      <div class="col-md-6">
-        <input type="text" id="empresa" class="form-control" placeholder="Empresa" required>
-        <div id="empresaError" class="input-error-message d-none">El nombre del proveedor es obligatorio.</div>
-      </div>
+    <!-- Botón para mostrar el formulario -->
+    <div class="mb-3">
+      <button id="toggleFormBtn" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Agregar proveedor
+      </button>
+    </div>
 
-      <div class="col-md-6"><input type="text" id="direccion" class="form-control" placeholder="Dirección"></div>
-      <div class="col-md-6"><input type="text" id="contacto" class="form-control" placeholder="Contacto"></div>
-      <div class="col-md-6"><input type="email" id="correo" class="form-control" placeholder="Correo"></div>
-      <div class="col-md-6"><input type="text" id="telefono" class="form-control" placeholder="Teléfono"></div>
-      <div class="col-md-6"><input type="text" id="sitio_web" class="form-control" placeholder="Sitio Web"></div>
-      <div class="col-md-6"><input type="text" id="facebook" class="form-control" placeholder="Facebook"></div>
-      <div class="col-md-6"><input type="text" id="instagram" class="form-control" placeholder="Instagram"></div>
-      <div class="col-md-6"><input type="text" id="youtube" class="form-control" placeholder="YouTube"></div>
-      <div class="col-md-6"><input type="text" id="twitter" class="form-control" placeholder="Twitter"></div>
-      <div class="col-md-6"><input type="text" id="linkedin" class="form-control" placeholder="LinkedIn"></div>
-      <div class="col-12"><textarea id="descripcion" class="form-control" placeholder="Descripción"></textarea></div>
-      <div class="col-12 d-flex gap-2">
-        <button type="submit" class="btn btn-success">
-          <i class="fas fa-save"></i> Guardar
-        </button>
-        <button type="button" class="btn btn-outline-danger btn-icon" onclick="resetForm()" title="Limpiar">
-          <i class="fas fa-broom"></i>
-        </button>
-      </div>
-    </form>
+    <!-- Formulario colapsable -->
+    <div id="formContainer" style="display: none;">
+      <form id="proveedorForm" class="row g-3 mb-4">
+        <div class="col-md-6">
+          <input type="text" id="empresa" class="form-control" placeholder="Empresa" />
+          <div id="empresaError" class="input-error-message d-none">El nombre del proveedor es obligatorio.</div>
+        </div>
+        <div class="col-md-6"><input type="text" id="direccion" class="form-control" placeholder="Dirección" /></div>
+        <div class="col-md-6"><input type="text" id="contacto" class="form-control" placeholder="Contacto" /></div>
+        <div class="col-md-6"><input type="email" id="correo" class="form-control" placeholder="Correo" /></div>
+        <div class="col-md-6"><input type="text" id="telefono" class="form-control" placeholder="Teléfono" /></div>
+        <div class="col-md-6"><input type="text" id="sitio_web" class="form-control" placeholder="Sitio Web" /></div>
+        <div class="col-md-6"><input type="text" id="facebook" class="form-control" placeholder="Facebook" /></div>
+        <div class="col-md-6"><input type="text" id="instagram" class="form-control" placeholder="Instagram" /></div>
+        <div class="col-md-6"><input type="text" id="youtube" class="form-control" placeholder="YouTube" /></div>
+        <div class="col-md-6"><input type="text" id="twitter" class="form-control" placeholder="Twitter" /></div>
+        <div class="col-md-6"><input type="text" id="linkedin" class="form-control" placeholder="LinkedIn" /></div>
+        <div class="col-12"><textarea id="descripcion" class="form-control" placeholder="Descripción"></textarea></div>
+
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
+          <button type="button" class="btn btn-secondary" onclick="resetForm()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
 
     <hr class="my-4">
 
