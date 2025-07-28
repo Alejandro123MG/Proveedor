@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Mostrar/ocultar formulario
   document.getElementById("toggleFormBtn").addEventListener("click", () => {
     const formContainer = document.getElementById("formContainer");
     const isVisible = formContainer.style.display === "block";
@@ -131,7 +130,7 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
       <tr>
         <td>${mostrarDato(p.empresa)}</td>
         <td>${mostrarDato(p.direccion)}</td>
-        <td>${mostrarDato(p.correo)}</td>
+        <td>${p.correo ? `<a href="mailto:${p.correo}">${p.correo}</a>` : mostrarDato(null)}</td>
         <td>${mostrarDato(p.telefono)}</td>
         <td>${p.sitio_web ? `<a href="${p.sitio_web}" target="_blank">${p.sitio_web}</a>` : mostrarDato(null)}</td>
         <td>
@@ -176,7 +175,6 @@ function editProveedor(p) {
   document.getElementById("linkedin").value = p.linkedin;
   document.getElementById("descripcion").value = p.descripcion;
 
-  // Mostrar formulario al editar
   const formContainer = document.getElementById("formContainer");
   formContainer.style.display = "block";
   formContainer.scrollIntoView({ behavior: "smooth" });
