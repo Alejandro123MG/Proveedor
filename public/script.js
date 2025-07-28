@@ -36,14 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("toggleFormBtn").addEventListener("click", () => {
-    const formContainer = document.getElementById("formContainer");
-    const isVisible = formContainer.style.display === "block";
-    formContainer.style.display = isVisible ? "none" : "block";
-    if (!isVisible) formContainer.scrollIntoView({ behavior: "smooth" });
-    if (isVisible) resetForm();
+    resetForm();
+    const modal = new bootstrap.Modal(document.getElementById("formModal"));
+    modal.show();
   });
 
-  // Activar tooltips Bootstrap globalmente
   new bootstrap.Tooltip(document.body, {
     selector: '[data-bs-toggle="tooltip"]',
     trigger: 'hover'
@@ -145,7 +142,6 @@ async function fetchProveedores(filtro = '', campo = 'empresa') {
       </tr>`;
     });
 
-    // Re-inicializa tooltips después de agregar contenido dinámico
     bootstrap.Tooltip.getInstance(document.body)?.dispose?.();
     new bootstrap.Tooltip(document.body, {
       selector: '[data-bs-toggle="tooltip"]',
@@ -166,9 +162,8 @@ function editProveedor(p) {
     }
   }
   document.getElementById("empresa").disabled = true;
-  const formContainer = document.getElementById("formContainer");
-  formContainer.style.display = "block";
-  formContainer.scrollIntoView({ behavior: "smooth" });
+  const modal = new bootstrap.Modal(document.getElementById("formModal"));
+  modal.show();
 }
 
 function resetForm() {
@@ -178,7 +173,6 @@ function resetForm() {
   empresaInput.disabled = false;
   empresaInput.classList.remove("input-error");
   document.getElementById("empresaError").classList.add("d-none");
-  document.getElementById("formContainer").style.display = "none";
 }
 
 function deleteProveedor(nombreEmpresa) {
@@ -241,6 +235,7 @@ document.getElementById("proveedorForm").addEventListener("submit", function (e)
     .then(() => {
       const fueEdicion = !!proveedorEditando;
       resetForm();
+      bootstrap.Modal.getInstance(document.getElementById("formModal")).hide();
       fetchProveedores(document.getElementById("buscar").value.trim(), document.getElementById("campo").value);
       showToast(fueEdicion ? "✏️ Proveedor actualizado correctamente" : "✅ Proveedor agregado correctamente");
     })
