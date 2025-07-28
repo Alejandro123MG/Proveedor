@@ -11,7 +11,7 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema" data-bs-toggle="tooltip" title="Cambiar tema">
     <i id="theme-icon" class="fas fa-moon text-dark"></i>
   </button>
 
@@ -21,7 +21,7 @@
 
     <!-- Botón para mostrar el formulario -->
     <div class="mb-3">
-      <button id="toggleFormBtn" class="btn btn-primary">
+      <button id="toggleFormBtn" class="btn btn-primary" data-bs-toggle="tooltip" title="Agregar nuevo proveedor">
         <i class="fas fa-plus-circle"></i> Agregar proveedor
       </button>
     </div>
@@ -46,8 +46,10 @@
         <div class="col-12"><textarea id="descripcion" class="form-control" placeholder="Descripción"></textarea></div>
 
         <div class="col-12 d-flex justify-content-end gap-2">
-          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
-          <button type="button" class="btn btn-secondary" onclick="resetForm()">
+          <button type="submit" class="btn btn-success" data-bs-toggle="tooltip" title="Guardar proveedor">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="resetForm()" data-bs-toggle="tooltip" title="Cancelar y ocultar formulario">
             <i class="fas fa-times"></i> Cancelar
           </button>
         </div>
@@ -56,6 +58,7 @@
 
     <hr class="my-4">
 
+    <!-- Buscador -->
     <div class="mb-4">
       <div class="input-group shadow-sm">
         <span class="input-group-text bg-primary text-white">
@@ -67,7 +70,7 @@
           <option value="descripcion">Descripción</option>
         </select>
         <input type="text" id="buscar" class="form-control" placeholder="Buscar proveedor...">
-        <button class="btn btn-outline-secondary" id="clearSearch" title="Limpiar">
+        <button class="btn btn-outline-secondary" id="clearSearch" data-bs-toggle="tooltip" title="Limpiar búsqueda">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -92,5 +95,8 @@
       </table>
     </div>
   </div>
+
+  <!-- Bootstrap JS (necesario para tooltips) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
